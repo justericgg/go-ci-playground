@@ -73,7 +73,7 @@ workflows:
               only:
                 - main
             tags:
-              ignore: /^.*/
+              ignore: /.*/
 
       - deploy-stg:
           requires:
@@ -83,7 +83,7 @@ workflows:
               only:
                 - release
             tags:
-              ignore: /^.*/
+              ignore: /.*/
 
       - deploy-uat:
           requires:
@@ -93,7 +93,7 @@ workflows:
               only:
                 - /^v.*/
             branches:
-              ignore: /^.*/
+              ignore: /.*/
 
       - deploy-prod:
           type: approval
@@ -104,4 +104,4 @@ workflows:
               only:
                 - /^v.*/
             branches:
-              ignore: /^.*/
+              ignore: /.*/
