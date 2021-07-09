@@ -1,22 +1,21 @@
 version: 2.1
 
 commands:
-  test:
+  run-tests:
     description: "Run tests"
     steps:
-      - run:
-        name: Unit Test
-        command: |
-          echo 'Start unit test'
-          echo 'Done !!'
+      - run: echo 'Start unit test'
+      - run: echo 'Done !!'
 
 jobs:
   test:
+    docker:
+      - image: alpine:3.7
     steps:
-      - test
+      - run-tests
 
-workflow:
+workflows:
   version: 2.1
   playground:
     jobs:
-      - test:
+      - test
