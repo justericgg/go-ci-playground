@@ -63,7 +63,12 @@ workflows:
   version: 2.1
   playground:
     jobs:
-      - test
+      - test:
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
 
       - deploy-beta:
           requires:
