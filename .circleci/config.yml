@@ -64,6 +64,11 @@ workflows:
   playground:
     jobs:
       - test
+        filters:
+          branches:
+            only: /.*/
+          tags:
+            only: /.*/
 
       - deploy-beta:
           requires:
