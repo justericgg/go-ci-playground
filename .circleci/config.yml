@@ -4,8 +4,25 @@ commands:
   run-tests:
     description: "Run tests"
     steps:
-      - run: echo 'Start unit test'
-      - run: echo 'Done !!'
+      - run:
+          name: Run unit test
+          command: |
+            echo 'Start unit test'
+            echo 'PASS !!'
+
+  codebuild-deploy:
+    description: "Deploy by AWS CodeBuild"
+    parameters:
+      sourceVersion:
+        type: string
+        default: dev
+    steps:
+      - run:
+          name: Run CodeBuild
+          command: |
+            sourceVersion=<<parameters.sourceVersion>>
+            echo 'Run CodeBuild deploy to $sourceVersion'
+            echo 'DONE !!'
 
 jobs:
   test:
@@ -14,8 +31,77 @@ jobs:
     steps:
       - run-tests
 
+  deploy-beta:
+    docker:
+      - image: alpine:3.7
+    steps:
+      - codebuild-deploy:
+          sourceVersion: beta
+
+  deploy-stg:
+    docker:
+      - image: alpine:3.7
+    steps:
+      - codebuild-deploy:
+          sourceVersion: stg
+
+  deploy-uat:
+    docker:
+      - image: alpine:3.7
+    steps:
+      - codebuild-deploy:
+          sourceVersion: uat
+
+  deploy-prod:
+    docker:
+      - image: alpine:3.7
+    steps:
+      - codebuild-deploy:
+          sourceVersion: prod
+
 workflows:
   version: 2.1
   playground:
     jobs:
       - test
+
+      - deploy-beta:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              ignore: /^.*/
+
+      - deploy-stg:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - release
+            tags:
+              ignore: /^.*/
+
+      - deploy-uat:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - /^v.*/
+            tags:
+              ignore: /^.*/
+
+      - deploy-prod:
+          type: approval
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - /^v.*/
+            tags:
+              ignore: /^.*/
