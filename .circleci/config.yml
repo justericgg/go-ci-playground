@@ -89,10 +89,10 @@ workflows:
           requires:
             - test
           filters:
-            branches:
+            tags:
               only:
                 - /^v.*/
-            tags:
+            branches:
               ignore: /^.*/
 
       - deploy-prod:
@@ -100,8 +100,8 @@ workflows:
           requires:
             - test
           filters:
-            branches:
+            tags:
               only:
                 - /^v.*/
-            tags:
+            branches:
               ignore: /^.*/
