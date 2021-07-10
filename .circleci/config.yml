@@ -20,8 +20,8 @@ commands:
       - run:
           name: Run CodeBuild
           command: |
-            sourceVersion=<<parameters.sourceVersion>>
-            echo 'Run CodeBuild deploy to $sourceVersion'
+            sourceVersion="<< parameters.sourceVersion >>"
+            echo "Run CodeBuild deploy to $sourceVersion"
             echo 'DONE !!'
 
 jobs:
